@@ -1,0 +1,45 @@
+openapi: "3.0.1"
+info:
+  title: "CantoTranslate API"
+  description: "API Definition for CantoTranslate"
+  version: "v1.0"
+paths:
+  /get-definition:
+    get:
+      summary: Get dictionary definition entry for a given word
+      description: Returns a Definition object
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Definition"
+        500:
+          description: "Internal Server Error"
+          content: {}
+      x-amazon-apigateway-integration:
+        payloadFormatVersion: "2.0"
+        httpMethod: "POST"
+        type: "aws_proxy"
+        uri:
+          Fn::Sub: arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${CantoTranslateGetDefinition.Arn}/invocations
+        responses:
+          default:
+            statusCode: "200"
+        connectionType: "INTERNET"
+components:
+  schemas:
+    Definition:
+      type: object
+      properties:
+        traditional:
+          type: string
+        simplified:
+          type: string
+        definition:
+          type: string
+        jyutping:
+          type: string
+        pinyin:
+          type: string

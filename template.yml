@@ -1,0 +1,51 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: 'CantoTranslate API Server'
+Parameters:
+  ServiceTableName:
+    Type: String
+    Default: CantoTranslate
+    Description: Service DynamoDB table name
+  BucketName:
+    Type: String
+    Description: S3 bucket name files are uploaded to
+Resources:
+  CantoTranslateApiGateway:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      StageName: Staging
+      CorsConfiguration:
+        AllowOrigins: "*"
+      DefaultRouteSettings:
+        ThrottlingRateLimit: 50
+        ThrottlingBurstLimit: 10
+      DefinitionBody:
+        'Fn::Transform':
+          Name: 'AWS::Include'
+          Parameters:
+            Location: !Sub s3://${BucketName}/swagger.yaml
+
+  CantoTranslateGetDefinition:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/
+      Description: Lambda function for get-definition
+      FunctionName: CantoTranslateGetDefinition
+      Handler: get-definition.handler
+      Policies:
+        - AWSLambdaBasicExecutionRole
+        - DynamoDBReadPolicy:
+            TableName: !Ref ServiceTableName
+      Runtime: python3.8
+      Timeout: 60
+      Environment:
+        Variables:
+          LOGGING_LEVEL: INFO
+      Events:
+        CantoTranslateApi:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref CantoTranslateApiGateway
+            Path: /get-definition
+            Method: GET
+      
