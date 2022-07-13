@@ -28,6 +28,32 @@ paths:
           default:
             statusCode: "200"
         connectionType: "INTERNET"
+  /get-entries:
+    get:
+      summary: Get list of entries for a given word from cc-canto
+      description: Returns a list of entry objects
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Definition"
+        500:
+          description: "Internal Server Error"
+          content: {}
+      x-amazon-apigateway-integration:
+        payloadFormatVersion: "2.0"
+        httpMethod: "POST"
+        type: "aws_proxy"
+        uri:
+          Fn::Sub: arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${CantoTranslateGetEntries.Arn}/invocations
+        responses:
+          default:
+            statusCode: "200"
+        connectionType: "INTERNET"
 components:
   schemas:
     Definition:

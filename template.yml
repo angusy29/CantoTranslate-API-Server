@@ -49,3 +49,35 @@ Resources:
             Path: /get-definition
             Method: GET
       
+  CantoTranslateGetEntries:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/
+      Description: Lambda function for get-entries
+      FunctionName: CantoTranslateGetEntries
+      Handler: get-entries.handler
+      Policies:
+        - AWSLambdaBasicExecutionRole
+      Runtime: python3.8
+      Timeout: 60
+      Layers:
+        - !Ref BasicLambdaLib
+      Environment:
+        Variables:
+          LOGGING_LEVEL: INFO
+      Events:
+        CantoTranslateApi:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref CantoTranslateApiGateway
+            Path: /get-entries
+            Method: GET
+
+  BasicLambdaLib:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: BasicLambdaLib
+      Description: External dependencies for Lambda function
+      ContentUri: ./lambda_layer
+      CompatibleRuntimes:
+        - python3.8

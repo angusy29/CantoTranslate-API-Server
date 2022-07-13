@@ -18,6 +18,10 @@ class Definition:
     definition: str
 ```
 
+1. Set up virtual environment `python3 -m venv .env`
+1. Activate the virtual environment `source .env/bin/activate`
+1. Install dependencies from `requirements.txt` into `lambda_layer` via `pip install -r requirements.txt --target lambda_layer/python`
+
 ### Setup
 
 1. Set up an S3 bucket where you can upload the swagger.yml to

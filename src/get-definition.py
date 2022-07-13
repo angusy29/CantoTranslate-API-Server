@@ -13,6 +13,7 @@ TABLE_NAME = 'CantoTranslate'
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.getLevelName(os.environ['LOGGING_LEVEL']))
 
+
 @dataclass
 class Definition:
     traditional: str
@@ -21,10 +22,12 @@ class Definition:
     pinyin: str
     definition: str
 
+
 @lru_cache(maxsize=1)
 def canto_translate_table() -> boto3.resource:
     dynamodb = boto3.resource('dynamodb')
     return dynamodb.Table(TABLE_NAME)
+
 
 def get_definition(traditional: str) -> Definition:
     response = canto_translate_table().query(
@@ -44,6 +47,7 @@ def get_definition(traditional: str) -> Definition:
         definition=item['definition']
     )
 
+
 def _create_response(body: str, code: int = 200) -> object:
     return {
         'isBase64Encoded': False,
@@ -55,11 +59,13 @@ def _create_response(body: str, code: int = 200) -> object:
         'body': body
     }
 
+
 def handler(event: typing.Dict, _: typing.Dict):
     logger.debug(event)
 
     try:
-        definition = get_definition(event['queryStringParameters']['traditional'])
+        definition = get_definition(
+            event['queryStringParameters']['traditional'])
         if not definition:
             return _create_response(body=json.dumps({}))
 
@@ -73,7 +79,5 @@ def handler(event: typing.Dict, _: typing.Dict):
             return _create_response(body=json.dumps({'message': 'Cannot connect to database'}), code=503)
         if error_code == 'RequestLimitExceeded':
             return _create_response(body=json.dumps({'message': 'Request throttled'}), code=429)
-    
+
     return _create_response(body=json.dumps({'message': 'Unknown error'}), code=500)
-
-
