@@ -7,7 +7,8 @@ from bs4 import BeautifulSoup
 from dataclasses import dataclass
 
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.getLevelName(os.environ['LOGGING_LEVEL']))
+logger.setLevel(logging.getLevelName(
+    os.environ.get('LOGGING_LEVEL', logging.INFO)))
 
 CANTONESE_URL = "https://cantonese.org/search.php?q="
 LIMIT = 5

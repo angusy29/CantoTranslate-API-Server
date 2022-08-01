@@ -38,3 +38,13 @@ aws s3 cp swagger.yml s3://$S3_BUCKET/swagger.yaml
 ```
 sam deploy --template-file template.yml --s3-bucket=$S3_BUCKET --parameter-overrides BucketName=$S3_BUCKET
 ```
+
+### Tests
+
+To execute tests:
+
+```
+pytest
+```
+
+`pytest.ini` ignores lambda_layer folder

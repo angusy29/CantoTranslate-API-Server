@@ -11,7 +11,8 @@ from functools import lru_cache
 TABLE_NAME = 'CantoTranslate'
 
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.getLevelName(os.environ['LOGGING_LEVEL']))
+logger.setLevel(logging.getLevelName(
+    os.environ.get('LOGGING_LEVEL', logging.INFO)))
 
 
 @dataclass

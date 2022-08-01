@@ -29,9 +29,9 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: src/
-      Description: Lambda function for get-definition
+      Description: Lambda function for get_definition
       FunctionName: CantoTranslateGetDefinition
-      Handler: get-definition.handler
+      Handler: get_definition.handler
       Policies:
         - AWSLambdaBasicExecutionRole
         - DynamoDBReadPolicy:
@@ -55,7 +55,7 @@ Resources:
       CodeUri: src/
       Description: Lambda function for get-entries
       FunctionName: CantoTranslateGetEntries
-      Handler: get-entries.handler
+      Handler: get_entries.handler
       Policies:
         - AWSLambdaBasicExecutionRole
       Runtime: python3.8
