@@ -73,6 +73,30 @@ Resources:
             Path: /get-entries
             Method: GET
 
+  CantoTranslateGetPronunciation:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/
+      Description: Lambda function for get-pronunciation
+      FunctionName: CantoTranslateGetPronunciation
+      Handler: get_pronunciation.handler
+      Policies:
+        - AWSLambdaBasicExecutionRole
+      Runtime: python3.8
+      Timeout: 60
+      Layers:
+        - !Ref BasicLambdaLib
+      Environment:
+        Variables:
+          LOGGING_LEVEL: INFO
+      Events:
+        CantoTranslateApi:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref CantoTranslateApiGateway
+            Path: /get-pronunciation
+            Method: GET
+
   BasicLambdaLib:
     Type: AWS::Serverless::LayerVersion
     Properties:
