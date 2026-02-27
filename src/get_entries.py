@@ -95,10 +95,7 @@ def handler(event: typing.Dict, _: typing.Dict):
         logger.debug("No results table found")
         return _create_response(body=json.dumps(entries))
 
-    for row in results_table.find_all("tr"):
-        if len(entries) >= LIMIT:
-            break
-
+    for row in results_table.find_all("tr")[:LIMIT]:
         cell = row.find("td")
         if not cell:
             continue
